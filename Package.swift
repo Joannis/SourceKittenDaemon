@@ -9,14 +9,14 @@ let package = Package(
   ],
 
   dependencies: [
-    .package(url: "https://github.com/Carthage/Commandant.git", from: "0.12.0"),
+    .package(url: "https://github.com/Carthage/Commandant.git", .branch("master")),
     .package(url: "https://github.com/vapor/vapor.git", .revision("3.0.0-alpha.4")),
     .package(url: "https://github.com/jpsim/SourceKitten.git", from: "0.18.0"),
-    .package(url: "https://github.com/nanzhong/Xcode.swift.git", from: "0.4.1")
+    .package(url: "https://github.com/tomlokhorst/XcodeEdit.git", from: "1.1.0")
   ],
 
   targets: [
-    .target(name: "SourceKittenDaemon", dependencies: ["Vapor", "SourceKittenFramework", "Xcode", "Commandant"]),
+    .target(name: "SourceKittenDaemon", dependencies: ["Vapor", "SourceKittenFramework", "XcodeEdit", "Commandant"]),
     .target(name: "sourcekittend", dependencies: ["SourceKittenDaemon"]),
   ]
 )

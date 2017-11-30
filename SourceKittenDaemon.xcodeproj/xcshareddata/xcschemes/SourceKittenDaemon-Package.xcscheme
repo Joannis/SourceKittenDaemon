@@ -70,9 +70,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Xcode::Xcode"
-               BuildableName = "Xcode.framework"
-               BlueprintName = "Xcode"
+               BlueprintIdentifier = "XcodeEdit::XcodeEdit"
+               BuildableName = "XcodeEdit.framework"
+               BlueprintName = "XcodeEdit"
                ReferencedContainer = "container:SourceKittenDaemon.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
