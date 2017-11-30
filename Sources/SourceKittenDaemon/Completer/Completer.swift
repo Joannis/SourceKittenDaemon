@@ -26,7 +26,9 @@ class Completer {
       
         self.eventStream = FSEventStreamCreate(
                 kCFAllocatorDefault,
-                { (_) in NotificationCenter.default.post(name: Notification.Name(rawValue: "skdrefresh"), object: nil) },
+                { _,_,_,_,_,_  in
+                    return NotificationCenter.default.post(name: Notification.Name(rawValue: "skdrefresh"), object: nil)
+                },
                 nil,
                 [project.projectFile.path] as CFArray,
                 FSEventStreamEventId(kFSEventStreamEventIdSinceNow),

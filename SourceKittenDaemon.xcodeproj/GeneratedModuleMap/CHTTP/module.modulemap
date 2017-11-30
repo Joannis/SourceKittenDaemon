@@ -1,0 +1,4 @@
+module CHTTP {
+    umbrella "/Users/joannisorlandos/Documents/SourceKittenDaemon/.build/checkouts/vapor.git-5492988889259800272/Sources/CHTTP/include"
+    export *
+}

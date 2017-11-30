@@ -19,3 +19,4 @@ registry.register(helpCommand)
 registry.main(defaultVerb: "help") { error in
     fputs("\(error)\n", stderr)
 }
+

@@ -18,48 +18,51 @@ public class CompletionServer {
     let port: Int
     let completer: Completer
 
-    let droplet = Droplet(arguments: ["vapor", "serve"])
+    let app: Application
 
-    public init(project: Project, port: Int) {
+    public init(project: Project, port: Int) throws {
+        self.app = try Application()
         self.completer = Completer(project: project)
         self.port = port
-
-        droplet.get("/ping") { request in
+        
+        let router = try app.make(Router.self)
+        
+        router.get("/ping") { request in
             return "OK"
         }
 
-        droplet.get("/project") { request in
+        router.get("/project") { request in
             return self.completer.project.projectFile.path
         }
 
-        droplet.get("/files") { request in
+        router.get("/files") { request -> String in
             let files = self.completer.sourceFiles()
             guard let jsonFiles = try? JSONSerialization.data(
                     withJSONObject: files,
                     options: JSONSerialization.WritingOptions.prettyPrinted
                   ),
                   let filesString = String(data: jsonFiles, encoding: String.Encoding.utf8) else {
-                throw Abort.custom(
-                  status: .badRequest,
-                  message: "{\"error\": \"Could not generate file list\"}"
+                throw Abort(
+                    .badRequest,
+                    reason: "{\"error\": \"Could not generate file list\"}"
                 )
             }
             return filesString
         }
 
-        droplet.get("/complete") { request in
+        router.get("/complete") { request -> String in
             guard let offsetString = request.headers["X-Offset"],
                   let offset = Int(offsetString) else {
-                throw Abort.custom(
-                  status: .badRequest,
-                  message: "{\"error\": \"Need X-Offset as completion offset for completion\"}"
+                throw Abort(
+                    .badRequest,
+                    reason: "{\"error\": \"Need X-Offset as completion offset for completion\"}"
                 )
             }
 
             guard let path = request.headers["X-Path"] else {
-                throw Abort.custom(
-                  status: .badRequest,
-                  message: "{\"error\": \"Need X-Path as path to the temporary buffer\"}"
+                throw Abort(
+                    .badRequest,
+                    reason: "{\"error\": \"Need X-Path as path to the temporary buffer\"}"
                 )
             }
 
@@ -72,16 +75,15 @@ public class CompletionServer {
             case .success(result: _):
                 return result.asJSONString()!
             case .failure(message: let msg):
-                throw Abort.custom(
-                  status: .badRequest,
-                  message: "{\"error\": \"\(msg)\"}"
+                throw Abort(
+                    .badRequest,
+                    reason: "{\"error\": \"\(msg)\"}"
                 )
             }
         }
     }
 
-    public func start() {
-        droplet.run(servers: ["default": (host: "0.0.0.0", port: port, securityLayer: .none)])
+    public func start() throws {
+        try app.run()
     }
-
 }

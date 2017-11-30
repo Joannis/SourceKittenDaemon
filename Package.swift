@@ -1,21 +1,22 @@
+// swift-tools-version:4.0
 import PackageDescription
 
 let package = Package(
   name: "SourceKittenDaemon",
-
-  targets: [
-    Target(name: "SourceKittenDaemon"),
-    Target(name: "sourcekittend", dependencies: [.Target(name: "SourceKittenDaemon")])
+  products: [
+    .executable(name: "SourceKittenDaemon", targets: ["SourceKittenDaemon"]),
+    .library(name: "sourcekittend", targets: ["sourcekittend"])
   ],
 
   dependencies: [
-    .Package(url: "https://github.com/Carthage/Commandant.git", versions: Version(0, 12, 0)..<Version(0, 12, .max)),
-    .Package(url: "https://github.com/jpsim/SourceKitten.git", Version(0, 17, 2)),
-    .Package(url: "https://github.com/vapor/vapor.git", Version(1, 1, 12)),
-    .Package(url: "https://github.com/nanzhong/Xcode.swift.git", Version(0, 4, 1))
+    .package(url: "https://github.com/Carthage/Commandant.git", from: "0.12.0"),
+    .package(url: "https://github.com/vapor/vapor.git", .revision("3.0.0-alpha.4")),
+    .package(url: "https://github.com/jpsim/SourceKitten.git", from: "0.18.0"),
+    .package(url: "https://github.com/nanzhong/Xcode.swift.git", from: "0.4.1")
   ],
 
-  exclude: [
-    "Tests/SourceKittenDaemonTests/Fixtures/Sources"
+  targets: [
+    .target(name: "SourceKittenDaemon", dependencies: ["Vapor", "SourceKittenFramework", "Xcode", "Commandant"]),
+    .target(name: "sourcekittend", dependencies: ["SourceKittenDaemon"]),
   ]
 )
